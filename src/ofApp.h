@@ -11,6 +11,7 @@
 
 #include "ofMain.h"
 #include "ofxTwitter.h"
+//#include "ofxGui.h"
 
 
 class ofApp: public ofBaseApp
@@ -30,5 +31,8 @@ public:
     //declare variables
     int count = 0;
     int countMissed = 0;
+	string UserString;
+	string TweetString;
+	stringstream ss;
 
 };

@@ -25,7 +25,7 @@ void ofApp::setup()
 
     /* Sets the polling interval for 6 seconds. This means new tweets
     are retrived every 6 seconds*/
-    client.setPollingInterval(1000);
+    client.setPollingInterval(6000);
 
     // This starts a simple search for an emoticon.
     client.search("Brexit"); // Use this to search for certain queries
@@ -60,16 +60,18 @@ void ofApp::setup()
 void ofApp::draw()
 {
     //sets background to black
-    ofBackground(29, 202, 255);
+    ofBackground(192, 222, 237);
 
     //counts number of tweets
     int total = count + countMissed;
 
     //string stream used to display number of tweets recived
-    std::stringstream ss;
+    //std::stringstream ss;
     ss << "  Received: " << count << std::endl;
     ss << "    Missed: " << countMissed << std::endl;
     ss << "     Total: " << total << std::endl;
+	ss << UserString << std::endl;
+	ss << TweetString << std::endl;
     
     /*
      Draw string stream info to the GUI window at x: 14 / y: 14
@@ -86,8 +88,10 @@ void ofApp::onStatus(const ofxTwitter::Status& status)
     count++;
     
     //output the tweet author and text
-    std::cout << "User: " << status.user()->name() << endl;
-    std::cout << "Tweet: " << status.text() << endl;
+    UserString = "User: " + status.user()->name();
+	TweetString = "Tweet: " + status.text();
+	std::cout << "User: " + status.user()->name() << endl;
+	std::cout << "Tweet: " + status.text() << endl;
     std::cout << "\n -----------------------------\n" << endl;
     
     /*
@@ -114,3 +118,4 @@ void ofApp::onMessage(const ofJson& json)
 {
 	// This is the raw message json and is ignored here.
 }
+
