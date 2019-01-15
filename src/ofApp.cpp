@@ -78,7 +78,7 @@ void ofApp::draw()
      Bitmap string is default text with limited customisation optimisations
      Load in fonts to enhance design
     */
-    ofDrawBitmapString(ss.str(), 14, 14);
+    ofDrawBitmapString(ss.str(), 24, 24);
 }
 
 //This function is called everytime the a new tweet is recieved

@@ -11,7 +11,6 @@
 
 #include "ofMain.h"
 #include "ofxTwitter.h"
-//#include "ofxGui.h"
 
 
 class ofApp: public ofBaseApp
@@ -34,5 +33,6 @@ public:
 	string UserString;
 	string TweetString;
 	stringstream ss;
+
 
 };
