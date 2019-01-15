@@ -25,10 +25,10 @@ void ofApp::setup()
 
     /* Sets the polling interval for 6 seconds. This means new tweets
     are retrived every 6 seconds*/
-    client.setPollingInterval(6000);
+    client.setPollingInterval(1000);
 
     // This starts a simple search for an emoticon.
-    client.search(":)");
+    client.search("Brexit"); // Use this to search for certain queries
     // Tweets are retured in the callbacks onStatus(..), onError(...), etc.
 
     /*
@@ -60,7 +60,7 @@ void ofApp::setup()
 void ofApp::draw()
 {
     //sets background to black
-    ofBackground(0);
+    ofBackground(29, 202, 255);
 
     //counts number of tweets
     int total = count + countMissed;
