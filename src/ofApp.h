@@ -11,6 +11,7 @@
 
 #include "ofMain.h"
 #include "ofxTwitter.h"
+//#include <sstream>
 
 
 class ofApp: public ofBaseApp
@@ -23,9 +24,10 @@ public:
     void onError(const ofxTwitter::Error& error);
     void onException(const std::exception& exception);
 	void onMessage(const ofJson& json);
-    
-	//declare twitter search client
-    ofxTwitter::SearchClient client;
+	void mousePressed(int x, int y, int button);
+
+		//declare twitter search client
+		ofxTwitter::SearchClient client;
     
     //declare variables
     int count = 0;
@@ -33,6 +35,7 @@ public:
 	string UserString;
 	string TweetString;
 	stringstream ss;
+	ofRectangle btn1, btn2;
 
 
 };
