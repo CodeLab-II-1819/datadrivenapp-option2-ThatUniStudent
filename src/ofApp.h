@@ -35,7 +35,7 @@ public:
 	string UserString;
 	string TweetString;
 	stringstream ss;
-	ofRectangle btn1, btn2;
+	ofRectangle btn1, btn2, btn3, btn4;
 
 
 };

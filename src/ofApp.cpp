@@ -8,6 +8,7 @@
 
 #include "ofApp.h"
 #include <sstream>
+#include <ctime>
 
 //initial app setup
 void ofApp::setup()
@@ -52,7 +53,15 @@ void ofApp::setup()
      In particular search.h
     */
 	btn1.set(20, 100, 200, 100);
-	btn2.set(250, 100, 50, 50);
+	btn2.set(20, 200, 50, 50);
+	btn3.set(20, 300, 50, 50);
+	btn4.set(20, 400, 50, 50);
+	time_t tt;
+	time(&tt);
+	tm TM = *localtime(&tt);
+
+	int year = TM.tm_year + 1900;
+	ss << year << std::endl;
 }
 
 /*
@@ -68,6 +77,10 @@ void ofApp::draw()
 	ofDrawRectangle(btn1);
 	ofSetColor(20, 20, 210);
 	ofDrawRectangle(btn2);
+	ofSetColor(70, 120, 90);
+	ofDrawRectangle(btn3);
+	ofSetColor(30, 100, 20);
+	ofDrawRectangle(btn4);
     //counts number of tweets
     int total = count + countMissed;
 
@@ -79,6 +92,7 @@ void ofApp::draw()
 	//for (int x = 0; x < 5; x++) {
 		ss << UserString << std::endl;
 		ss << TweetString << std::endl;
+		//ss << year << std::endl;
 		ss << std::endl;
 	//}
 
@@ -141,5 +155,16 @@ void ofApp::mousePressed(int x, int y, int button) { //When a button is pressed 
 		client.search("Trump");
 		ss.str("");
 	}
-}
+	if (btn3.inside(x, y)) {
+		std::cout << "Change to location" << std::endl;
+		client.search("51.377177, -2.436948, 3mi");
+		ss.str("");
+	}
+	if (btn4.inside(x, y)) {
+		std::cout << "Change to location" << std::endl;
+		client.search("51.436600,-2.481097,1mi");
+		ss.str("");
+	}
+}//https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/basic-stream-parameters.html
+
 
