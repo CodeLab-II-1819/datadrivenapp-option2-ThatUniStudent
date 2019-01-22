@@ -25,7 +25,8 @@ public:
     void onException(const std::exception& exception);
 	void onMessage(const ofJson& json);
 	void mousePressed(int x, int y, int button);
-
+	void GrabTweet();
+	void CheckRepeat();
 		//declare twitter search client
 		ofxTwitter::SearchClient client;
     
@@ -36,6 +37,7 @@ public:
 	string TweetString;
 	stringstream ss;
 	ofRectangle btn1, btn2, btn3, btn4;
+	string OldUser;
 
 
 };

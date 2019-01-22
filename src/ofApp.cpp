@@ -9,12 +9,11 @@
 #include "ofApp.h"
 #include <sstream>
 #include <ctime>
-
 //initial app setup
 void ofApp::setup()
 {
     //lower app frameRate
-    ofSetFrameRate(10);
+    ofSetFrameRate(60);
 
     // Easily register for all search events.
     client.registerSearchEvents(this);
@@ -27,7 +26,7 @@ void ofApp::setup()
 
     /* Sets the polling interval for 6 seconds. This means new tweets
     are retrived every 6 seconds*/
-    client.setPollingInterval(6000);
+    client.setPollingInterval(1000);
 
     // This starts a simple search for an emoticon.
     client.search("Brexit"); // Use this to search for certain queries
@@ -71,8 +70,8 @@ void ofApp::setup()
 */
 void ofApp::draw()
 {
-    //sets background to black
-    ofBackground(192, 222, 237);
+	//sets background to black
+	ofBackground(192, 222, 237);
 	ofSetColor(0, 200, 20);
 	ofDrawRectangle(btn1);
 	ofSetColor(20, 20, 210);
@@ -81,19 +80,25 @@ void ofApp::draw()
 	ofDrawRectangle(btn3);
 	ofSetColor(30, 100, 20);
 	ofDrawRectangle(btn4);
-    //counts number of tweets
-    int total = count + countMissed;
+	//counts number of tweets
+	int total = count + countMissed;
 
-    //string stream used to display number of tweets recived
-    //std::stringstream ss;
-    //ss << "  Received: " << count << std::endl;
-    //ss << "    Missed: " << countMissed << std::endl;
+	//string stream used to display number of tweets recived
+	//std::stringstream ss;
+	//ss << "  Received: " << count << std::endl;
+	//ss << "    Missed: " << countMissed << std::endl;
    // ss << "     Total: " << total << std::endl;
 	//for (int x = 0; x < 5; x++) {
-		ss << UserString << std::endl;
-		ss << TweetString << std::endl;
+		//ss << UserString << std::endl;
+		//ss << TweetString << std::endl;
 		//ss << year << std::endl;
-		ss << std::endl;
+		//ss << std::endl;
+	//}
+	//for (int x = 0; x > 15; x++)
+
+	//{
+		CheckRepeat();
+		//ofDrawBitmapString(ss.str(), 400, 50);
 	//}
 
     /*
@@ -105,6 +110,19 @@ void ofApp::draw()
 	//ss.str("");
 }
 
+void ofApp::GrabTweet() {
+	ss << UserString << std::endl;
+	ss << TweetString << std::endl;
+	ss << std::endl;
+	OldUser = UserString;
+}
+void ofApp::CheckRepeat() {
+	if (OldUser.compare(UserString) != 0)
+	{
+		GrabTweet();
+		std::cout << "Tweet out" << std::endl;
+	}
+}
 //This function is called everytime the a new tweet is recieved
 void ofApp::onStatus(const ofxTwitter::Status& status)
 {
@@ -113,6 +131,7 @@ void ofApp::onStatus(const ofxTwitter::Status& status)
 	//Have moving panels that go down and clear when off the screen
     //output the tweet author and text
     UserString = "User: " + status.user()->name();
+	//string OldUser = UserString;
 	//ss << "User: " + status.user()->name() << endl;
 	TweetString = "Tweet: " + status.text();
 	//ss << "Tweet: " + status.text() << endl;
@@ -157,7 +176,12 @@ void ofApp::mousePressed(int x, int y, int button) { //When a button is pressed 
 	}
 	if (btn3.inside(x, y)) {
 		std::cout << "Change to location" << std::endl;
-		client.search("51.377177, -2.436948, 3mi");
+		ofxTwitter::SearchQuery query("Bath Spa University");
+		query.setGeoCode(51.3758, -2.3599, 10, ofxTwitter::SearchQuery::UNITS_MILES);
+		query.setLanguage("en");
+		client.search(query);
+		//client.search("51.377177, -2.436948, 3mi");
+		std::cout << "Bath Spa University Within 10 miles" << std::endl;
 		ss.str("");
 	}
 	if (btn4.inside(x, y)) {
