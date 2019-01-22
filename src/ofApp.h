@@ -27,6 +27,7 @@ public:
 	void mousePressed(int x, int y, int button);
 	void GrabTweet();
 	void CheckRepeat();
+	void ssDraw();
 		//declare twitter search client
 		ofxTwitter::SearchClient client;
     
@@ -36,8 +37,9 @@ public:
 	string UserString;
 	string TweetString;
 	stringstream ss;
-	ofRectangle btn1, btn2, btn3, btn4;
+	ofRectangle liveOff, btn1, btn2, btn3, btn4;
 	string OldUser;
-
+	int ssCount = 0;
+	string PrevSearch = "";
 
 };

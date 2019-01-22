@@ -51,6 +51,7 @@ void ofApp::setup()
      openFrameworks/addons/ofxTwitter/libs/ofxTwitter/include/ofx/Twitter
      In particular search.h
     */
+	liveOff.set(500, 500, 200, 100);
 	btn1.set(20, 100, 200, 100);
 	btn2.set(20, 200, 50, 50);
 	btn3.set(20, 300, 50, 50);
@@ -70,8 +71,10 @@ void ofApp::setup()
 */
 void ofApp::draw()
 {
-	//sets background to black
+	//sets background to Twitter Background Colour
 	ofBackground(192, 222, 237);
+	ofSetColor(0, 132, 180);
+	ofDrawRectangle(liveOff);
 	ofSetColor(0, 200, 20);
 	ofDrawRectangle(btn1);
 	ofSetColor(20, 20, 210);
@@ -97,6 +100,10 @@ void ofApp::draw()
 	//for (int x = 0; x > 15; x++)
 
 	//{
+	if ((ssCount % 20) == 0)
+	{
+		ss.str("");
+	}
 		CheckRepeat();
 		//ofDrawBitmapString(ss.str(), 400, 50);
 	//}
@@ -111,9 +118,13 @@ void ofApp::draw()
 }
 
 void ofApp::GrabTweet() {
+	ofSetColor(8, 160, 233);
 	ss << UserString << std::endl;
+	ssDraw();
+	ofSetColor(232, 245, 253);
 	ss << TweetString << std::endl;
 	ss << std::endl;
+	ssDraw();
 	OldUser = UserString;
 }
 void ofApp::CheckRepeat() {
@@ -122,6 +133,11 @@ void ofApp::CheckRepeat() {
 		GrabTweet();
 		std::cout << "Tweet out" << std::endl;
 	}
+}
+void ofApp::ssDraw()
+{
+	ofDrawBitmapString(ss.str(), 400, 50);
+	ssCount++;
 }
 //This function is called everytime the a new tweet is recieved
 void ofApp::onStatus(const ofxTwitter::Status& status)
@@ -164,17 +180,27 @@ void ofApp::onMessage(const ofJson& json)
 	// This is the raw message json and is ignored here.
 }
 void ofApp::mousePressed(int x, int y, int button) { //When a button is pressed it changes the subject
+	if (liveOff.inside(x, y))
+	{
+		std::cout << "Live rolling off" << std::endl;
+		client.stop();
+	}
 	if (btn1.inside(x, y)) {
+		//ssCount = 0;
 		std::cout << "Change to Brexit" << std::endl;
 		client.search("Brexit");
-		ss.str("");
+		PrevSearch = "Brexit";
+		//ss.str("");
 	}
 	if (btn2.inside(x, y)) {
+		//ssCount = 0;
 		std::cout << "Change to Trump" << std::endl;
 		client.search("Trump");
-		ss.str("");
+		PrevSearch = "Trump";
+		//ss.str("");
 	}
 	if (btn3.inside(x, y)) {
+		//ssCount = 0;
 		std::cout << "Change to location" << std::endl;
 		ofxTwitter::SearchQuery query("Bath Spa University");
 		query.setGeoCode(51.3758, -2.3599, 10, ofxTwitter::SearchQuery::UNITS_MILES);
@@ -182,9 +208,10 @@ void ofApp::mousePressed(int x, int y, int button) { //When a button is pressed 
 		client.search(query);
 		//client.search("51.377177, -2.436948, 3mi");
 		std::cout << "Bath Spa University Within 10 miles" << std::endl;
-		ss.str("");
+		//ss.str("");
 	}
 	if (btn4.inside(x, y)) {
+		ssCount = 0;
 		std::cout << "Change to location" << std::endl;
 		client.search("51.436600,-2.481097,1mi");
 		ss.str("");
