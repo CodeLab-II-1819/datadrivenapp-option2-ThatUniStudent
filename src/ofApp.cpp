@@ -56,6 +56,14 @@ void ofApp::setup()
 	btn2.set(20, 200, 50, 50);
 	btn3.set(20, 300, 50, 50);
 	btn4.set(20, 400, 50, 50);
+
+	CarbonBlock.load("CARBONBL.TTF", 14, true, true);
+	CarbonBlock.setLineHeight(18.0f);
+	CarbonBlock.setLetterSpacing(1.037);
+	Candara.load("Candara.ttf", 14, true, true);
+	Candara.setLineHeight(18.0f);
+	Candara.setLetterSpacing(1.037);
+
 	time_t tt;
 	time(&tt);
 	tm TM = *localtime(&tt);
@@ -113,17 +121,32 @@ void ofApp::draw()
      Bitmap string is default text with limited customisation optimisations
      Load in fonts to enhance design
     */
-    ofDrawBitmapString(ss.str(), 400, 50);
+    //ofDrawBitmapString(ss.str(), 400, 50);
+		Candara.drawString(ss.str(), 400, 50);
 	//ss.str("");
+		/*if (IsUserName == true)
+		{
+			std::cout << "UserNameFont" << std::endl;
+			ofSetColor(8, 160, 233);
+			CarbonBlock.drawString(ssU.str(), 400, 50);
+			//ofDrawBitmapString(ss.str(), 400, 50);
+		}
+		if (IsUserName == false)
+		{
+			ofSetColor(232, 245, 253);
+			Candara.drawString(ssT.str(), 600, 50);
+		}*/
 }
 
 void ofApp::GrabTweet() {
-	ofSetColor(8, 160, 233);
+	//UserString.ofSetColor(8, 160, 233);
 	ss << UserString << std::endl;
+	//IsUserName = true;
 	ssDraw();
-	ofSetColor(232, 245, 253);
+	//ofSetColor(232, 245, 253);
 	ss << TweetString << std::endl;
 	ss << std::endl;
+	//IsUserName = false;
 	ssDraw();
 	OldUser = UserString;
 }
@@ -136,7 +159,17 @@ void ofApp::CheckRepeat() {
 }
 void ofApp::ssDraw()
 {
-	ofDrawBitmapString(ss.str(), 400, 50);
+	/*if (IsUserName == true)
+	{
+		std::cout << "UserNameFont" << std::endl;
+		CarbonBlock.drawString(ss.str(), 400, 50);
+		ofDrawBitmapString(ss.str(), 400, 50);
+	}
+	if (IsUserName == false)
+	{
+		Candara.drawString(ss.str(), 400, 50);
+	}*/
+	//ofDrawBitmapString(ss.str(), 400, 50);
 	ssCount++;
 }
 //This function is called everytime the a new tweet is recieved
@@ -211,10 +244,10 @@ void ofApp::mousePressed(int x, int y, int button) { //When a button is pressed 
 		//ss.str("");
 	}
 	if (btn4.inside(x, y)) {
-		ssCount = 0;
+		//ssCount = 0;
 		std::cout << "Change to location" << std::endl;
-		client.search("51.436600,-2.481097,1mi");
-		ss.str("");
+		client.search("from:Vain2090");
+		//ss.str("");
 	}
 }//https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/basic-stream-parameters.html
 

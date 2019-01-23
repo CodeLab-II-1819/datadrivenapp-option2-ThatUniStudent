@@ -41,5 +41,8 @@ public:
 	string OldUser;
 	int ssCount = 0;
 	string PrevSearch = "";
+	ofTrueTypeFont CarbonBlock;
+	ofTrueTypeFont Candara;
+	bool IsUserName = true;
 
 };
