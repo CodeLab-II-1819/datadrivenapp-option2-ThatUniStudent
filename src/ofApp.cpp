@@ -9,217 +9,131 @@
 #include "ofApp.h"
 #include <string>
 #include <sstream>
-#include <ctime>
 //initial app setup
 void ofApp::setup()
 {
-    //lower app frameRate
+    //High frame rate to call on tweets faster
     ofSetFrameRate(60);
 
     // Easily register for all search events.
     client.registerSearchEvents(this);
 
-    /* Ensure you have created and app and updated the credentials file
-     in the bin/data folder. You can create app at:
-     https://apps.twitter.com */
     //Load in the credentials for access to twitter
     client.setCredentialsFromFile("credentials.json");
 
-    /* Sets the polling interval for 6 seconds. This means new tweets
-    are retrived every 6 seconds*/
+    // Calls on Twitter to receive new tweets. This means new tweets are retrieved every second
     client.setPollingInterval(1000);
 
-    // This starts a simple search for an emoticon.
-    //client.search("Brexit"); // Use this to search for certain queries
-	//client.stop();
-    // Tweets are retured in the callbacks onStatus(..), onError(...), etc.
-
-    /*
-     To design more complex searches, see the the API documentation here:
-     https://dev.twitter.com/rest/public/search
-     and:
-     https://developer.twitter.com/en/docs/tweets/rules-and-filtering/overview/standard-operators
-     You can then use the search object ofxTwitter::SearchQuery like this:
-     
-        ofxTwitter::SearchQuery query(":)");
-        query.setLanguage("en");
-        client.search(query);
-
-     This would return only tweets in English
-    
-     To see how else you can refine the queries you should explore
-     the .h files included in:
-     openFrameworks/addons/ofxTwitter/libs/ofxTwitter/include/ofx/Twitter
-     In particular search.h
-    */
 	liveOff.set(500, 20, 400, 50);
-	btn1.set(20, 175, 100, 50);
-	btn2.set(20, 250, 100, 50);
-	btn3.set(20, 325, 100, 50);
-	btn4.set(20, 400, 100, 50);
-	btn5.set(20, 475, 100, 50);
-	btn6.set(20, 550, 100, 50);
-	btn10.set(20, 625, 100, 50);
-
-	CarbonBlock.load("CARBONBL.TTF", 14, true, true);
+	btn1.set(20, 175, 150, 50);
+	btn2.set(20, 250, 150, 50);
+	btn3.set(20, 325, 150, 50);
+	btn4.set(20, 400, 150, 50);
+	btn5.set(20, 475, 150, 50);
+	btn6.set(20, 550, 150, 50);
+	btn7.set(20, 625, 150, 50);
+	btn8.set(20, 700, 150, 50);
+	btn9.set(20, 775, 150, 50);
+	btn10.set(20, 850, 150, 50);
+	// These are the many buttons for the GUI
+	logo.load("TwitterLogo.png"); // loads in the logo for the corner
+	CarbonBlock.load("CARBONBL.TTF", 14, true, true); // The 2 fonts that are used, called by the TTF file and then the font
 	CarbonBlock.setLineHeight(18.0f);
-	CarbonBlock.setLetterSpacing(1.037);
+	CarbonBlock.setLetterSpacing(1.037); // this sets the format of the font
 	Candara.load("Candara.ttf", 14, true, true);
 	Candara.setLineHeight(18.0f);
-	Candara.setLetterSpacing(1.037);
-
-	time_t tt;
-	time(&tt);
-	tm TM = *localtime(&tt);
-
-	year = TM.tm_year + 1900;
-	month = TM.tm_mon;
-	day = TM.tm_mday;
-	//TodayDate = year + "-" + month;// "-" + day;
-	//string Date = TodayDate + "-" + day;
-	//std::cout << TodayDate << std::endl;
+	Candara.setLetterSpacing(1.037); 
 }
 
 /*
  Draw function is used to draw to GUI.
  Current setup simply draws tweet count info to a small GUI
- Tweets are displayed in console
+ Tweets are displayed in console for debuging and watching what tweets are going through
 */
 void ofApp::draw()
 {
-	//sets background to Twitter Background Colour
-	ofBackground(192, 222, 237);
+	ofBackground(192, 222, 237); //sets background to Twitter Background Colour
 	ofSetColor(0, 132, 180);
 	ofDrawRectangle(liveOff);
-	//liveOff.drawString("Roll");
-	ofSetColor(0, 200, 20);
+	ofSetColor(188, 22, 22);
 	ofDrawRectangle(btn1);
-	ofSetColor(20, 20, 210);
+	ofSetColor(188, 22, 22);
 	ofDrawRectangle(btn2);
-	ofSetColor(70, 120, 90);
+	ofSetColor(21, 150, 44);
 	ofDrawRectangle(btn3);
-	ofSetColor(30, 100, 20);
+	ofSetColor(13, 104, 137);
 	ofDrawRectangle(btn4);
-	ofSetColor(60, 200, 40);
+	ofSetColor(255, 255, 28);
 	ofDrawRectangle(btn5);
-	ofSetColor(100, 200, 40);
+	ofSetColor(160, 33, 160);
 	ofDrawRectangle(btn6);
-	ofSetColor(120, 200, 40);
+	ofSetColor(160, 33, 160);
 	ofDrawRectangle(btn7);
-	ofSetColor(140, 200, 40);
+	ofSetColor(209, 136, 35);
 	ofDrawRectangle(btn8);
-	ofSetColor(170, 200, 40);
+	ofSetColor(76, 99, 0);
 	ofDrawRectangle(btn9);
-	ofSetColor(80, 200, 40);
+	ofSetColor(23, 41, 145);
 	ofDrawRectangle(btn10);
 	ofSetColor(50, 50, 50);
+	// Most of the buttons are set their colours here and drawn
 	ofSetLineWidth(4.0f); 
 	ofDrawLine(5, 100, ofGetWidth() - 5, 100);
 	ofDrawLine(200, 100, 200, ofGetHeight() - 5);
-	//counts number of tweets
-	int total = count + countMissed;
-
-	//string stream used to display number of tweets recived
-	//std::stringstream ss;
-	//ss << "  Received: " << count << std::endl;
-	//ss << "    Missed: " << countMissed << std::endl;
-   // ss << "     Total: " << total << std::endl;
-	//for (int x = 0; x < 5; x++) {
-		//ss << UserString << std::endl;
-		//ss << TweetString << std::endl;
-		//ss << year << std::endl;
-		//ss << std::endl;
-	//}
-	//for (int x = 0; x > 15; x++)
-
-	//{
-	if ((ssCount % 20) == 0)
+	// 2 lines to seperate the header from the buttons and the tweets
+	logo.draw(20, 20); // draws the logo on
+	CarbonBlock.drawString("Choose a subject", 25, 145);
+	CarbonBlock.drawString("Brexit", 45, 205);
+	CarbonBlock.drawString("Trump", 45, 280);
+	CarbonBlock.drawString("Oxford", 45, 355);
+	CarbonBlock.drawString("SpaceX", 45, 430);
+	CarbonBlock.drawString("#Happy", 45, 505);
+	CarbonBlock.drawString("Popular", 45, 580);
+	CarbonBlock.drawString("Random", 45, 655);
+	CarbonBlock.drawString("Dogs", 45, 730);
+	CarbonBlock.drawString("Sponsored", 45, 805);
+	CarbonBlock.drawString("Bath Spa Uni", 45, 880);
+	CarbonBlock.drawString("Stop Incoming Tweets", 600, 45);
+	// draws all the text out for the GUI
+	
+	if ((ssCount % 20) == 0) // Every 20 lines (10 tweets with usernames) the screen clears allowing for 20 new lines
 	{
-		ss.str("");
+		ss.str(""); // this clears the string stream
 	}
-		CheckRepeat();
-		//ofDrawBitmapString(ss.str(), 400, 50);
-	//}
-
-    /*
-     Draw string stream info to the GUI window at x: 14 / y: 14
-     Bitmap string is default text with limited customisation optimisations
-     Load in fonts to enhance design
-    */
-    //ofDrawBitmapString(ss.str(), 400, 50);
+		CheckRepeat(); // calls on the checkRepeat to prevent spam
+		
 		ofSetColor(124, 124, 124);
-		Candara.drawString(ss.str(), 225, 135);
-	//ss.str("");
-		/*if (IsUserName == true)
-		{
-			std::cout << "UserNameFont" << std::endl;
-			ofSetColor(8, 160, 233);
-			CarbonBlock.drawString(ssU.str(), 400, 50);
-			//ofDrawBitmapString(ss.str(), 400, 50);
-		}
-		if (IsUserName == false)
-		{
-			ofSetColor(232, 245, 253);
-			Candara.drawString(ssT.str(), 600, 50);
-		}*/
+		Candara.drawString(ss.str(), 225, 135); // this line prints out the tweet with the font Candara
 }
 
-void ofApp::GrabTweet() {
-	//UserString.ofSetColor(8, 160, 233);
+void ofApp::GrabTweet() { //GrabTweet prints the tweets and sends back the tweet for spam prevention
 	ss << UserString << std::endl;
-	//IsUserName = true;
 	ssDraw();
-	//ofSetColor(232, 245, 253);
 	ss << TweetString << std::endl;
 	ss << std::endl;
-	//IsUserName = false;
 	ssDraw();
-	OldUser = UserString;
+	OldUser = UserString; // this is the temp variable for the checkRepeat function
 }
-void ofApp::CheckRepeat() {
-	if (OldUser.compare(UserString) != 0)
+void ofApp::CheckRepeat() { //This function is to check that after every cycle it doesnt output the same tweet and thus stopping the spam of tweets
+	if (OldUser.compare(UserString) != 0) // compares the 2 strings
 	{
-		GrabTweet();
+		GrabTweet(); // if the tweet is different it then calls GrabTweet
 		std::cout << "Tweet out" << std::endl;
 	}
 }
 void ofApp::ssDraw()
 {
-	/*if (IsUserName == true)
-	{
-		std::cout << "UserNameFont" << std::endl;
-		CarbonBlock.drawString(ss.str(), 400, 50);
-		ofDrawBitmapString(ss.str(), 400, 50);
-	}
-	if (IsUserName == false)
-	{
-		Candara.drawString(ss.str(), 400, 50);
-	}*/
-	//ofDrawBitmapString(ss.str(), 400, 50);
-	ssCount++;
+	ssCount++; // counts everytimes a line is printed out for the clearing code
 }
 //This function is called everytime the a new tweet is recieved
 void ofApp::onStatus(const ofxTwitter::Status& status)
 {
-    //increase tweet count
-    count++;
-	//Have moving panels that go down and clear when off the screen
     //output the tweet author and text
-    UserString = "User: " + status.user()->name();
-	//string OldUser = UserString;
-	//ss << "User: " + status.user()->name() << endl;
+    UserString = "User: " + status.user()->name(); // puts the tweet and author into a stringstream
 	TweetString = "Tweet: " + status.text();
-	//ss << "Tweet: " + status.text() << endl;
-	std::cout << "User: " + status.user()->name() << endl;
+	std::cout << "User: " + status.user()->name() << endl; // outputing to the console means I can see what tweets are coming through and being outputted
 	std::cout << "Tweet: " + status.text() << endl;
     std::cout << "\n -----------------------------\n" << endl;
-    /*
-     To see what other information you can display you should explore
-     the .h files included in:
-     openFrameworks/addons/ofxTwitter/libs/ofxTwitter/include/ofx/Twitter
-     In particular status.h
-    */
-	//draw();
 }
 
 //returns an error message if error encountered recieving tweets
@@ -242,85 +156,92 @@ void ofApp::mousePressed(int x, int y, int button) { //When a button is pressed 
 	if (liveOff.inside(x, y))
 	{
 		std::cout << "Live rolling off" << std::endl;
-		client.stop();
+		client.stop();	// This stops the programme calling on the Twitter API
 	}
-	if (btn1.inside(x, y)) {
-		//ssCount = 0;
+	if (btn1.inside(x, y)) { // if the mouse click is in the x and y of the button then it will trigger the if statement
 		std::cout << "Change to Brexit" << std::endl;
-		ofxTwitter::SearchQuery query("Brexit");
-		query.setResultType(ofxTwitter::SearchQuery::ResultType::MIXED);
-		query.setCount(1);
-		query.setLanguage("en");
-		client.search(query);
-		//ss.str("");
+		ofxTwitter::SearchQuery query("Brexit"); // Changes the query to what is in the quotation mark
+		query.setResultType(ofxTwitter::SearchQuery::ResultType::MIXED); // The result type filters the results into 3 different categories
+		// MIXED, POPULAR and RECENT, MIXED is a mix of POPULAR and RECENT tweets
+		query.setCount(1); //This reduces the number of tweets to return
+		query.setLanguage("en"); // This sets the language of the tweets to return
+		client.search(query); //This actually searches the query
 	}
 	if (btn2.inside(x, y)) {
-		//ssCount = 0;
 		std::cout << "Change to Trump" << std::endl;
 		ofxTwitter::SearchQuery query("Trump");
 		query.setResultType(ofxTwitter::SearchQuery::ResultType::MIXED);
 		query.setCount(1);
 		query.setLanguage("en");
 		client.search(query);
-		//ss.str("");
 	}
 	if (btn3.inside(x, y)) {
-		//ssCount = 0;
 		std::cout << "Change to location Oxford" << std::endl;
 		ofxTwitter::SearchQuery query("");
-		query.setGeoCode(51.7520, 1.2577, 10, ofxTwitter::SearchQuery::UNITS_MILES);
+		query.setGeoCode(51.7520, 1.2577, 10, ofxTwitter::SearchQuery::UNITS_MILES); //This GeoCode commands allows to search for tweets in a radius
+		// the first number is the longitude, then the latitude, then the radius number followed by what the measurement is
 		query.setResultType(ofxTwitter::SearchQuery::ResultType::MIXED);
 		query.setCount(1);
 		query.setLanguage("en");
 		client.search(query);
 	}
 	if (btn4.inside(x, y)) {
-		//ssCount = 0;
 		std::cout << "Change to Tweets from SpaceX" << std::endl;
-		ofxTwitter::SearchQuery query("from:SpaceX");
+		ofxTwitter::SearchQuery query("from:SpaceX"); // from: means from the user
 		query.setResultType(ofxTwitter::SearchQuery::ResultType::MIXED);
 		query.setCount(1);
 		query.setLanguage("en");
 		client.search(query);
-		//ss.str("");
 	}
 	if (btn5.inside(x, y)) {
-		//ssCount = 0;
 		std::cout << "#happy tweets" << std::endl;
 		ofxTwitter::SearchQuery query("#happy");
 		query.setResultType(ofxTwitter::SearchQuery::ResultType::MIXED);
+		query.setCount(1);
 		query.setLanguage("en");
 		client.search(query);
 	}
 	if (btn6.inside(x, y)) {
-		//ssCount = 0;
-		std::cout << "Popular tweets from today" << std::endl;
-		ofxTwitter::SearchQuery query("");
-		query.setUntil(year, month, day);
+		std::cout << "Popular tweets from the week" << std::endl;
+		ofxTwitter::SearchQuery query("%20 since:2019-02-01"); // &20 means space and since is sent since date
 		query.setResultType(ofxTwitter::SearchQuery::ResultType::POPULAR);
+		query.setCount(1);
 		query.setLanguage("en");
 		client.search(query);
 	}
 	if (btn7.inside(x, y)) {
-		//ssCount = 0;
+		std::cout << "Random Tweets" << std::endl;
+		ofxTwitter::SearchQuery query("%20");
+		query.setResultType(ofxTwitter::SearchQuery::ResultType::MIXED);
+		query.setCount(1);
+		query.setLanguage("en");
+		client.search(query);
+	}
+	if (btn8.inside(x, y)) {
 		std::cout << "Puppy's" << std::endl;
-		ofxTwitter::SearchQuery query("dog filter:media");
+		ofxTwitter::SearchQuery query("dog filter:media"); // filter:media means containing the query and an image or video
 		query.setResultType(ofxTwitter::SearchQuery::ResultType::POPULAR);
+		query.setCount(1);
+		query.setLanguage("en");
+		client.search(query);
+	}
+	if (btn9.inside(x, y)) {
+		std::cout << "Random sponsored tweets" << std::endl;
+		ofxTwitter::SearchQuery query("sponsor -filter:retweets"); // -filter:retweets means containing the query and filtering out retweets
+		query.setResultType(ofxTwitter::SearchQuery::ResultType::MIXED);
+		query.setCount(1);
 		query.setLanguage("en");
 		client.search(query);
 	}
 	if (btn10.inside(x, y)) {
-		//ssCount = 0;
-		std::cout << "Change to location" << std::endl;
+		std::cout << "Bath Spa University Within 10 miles" << std::endl;
 		ofxTwitter::SearchQuery query("Bath Spa University");
 		query.setGeoCode(51.3758, -2.3599, 10, ofxTwitter::SearchQuery::UNITS_MILES);
-		query.setResultType(ofxTwitter::SearchQuery::ResultType::MIXED);
+		query.setCount(1);
 		query.setLanguage("en");
 		client.search(query);
-		//client.search("51.377177, -2.436948, 3mi");
 		std::cout << "Bath Spa University Within 10 miles" << std::endl;
-		//ss.str("");
 	}
-}//https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/basic-stream-parameters.html
+}
 
 
